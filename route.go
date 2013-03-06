@@ -31,6 +31,15 @@ type Route struct {
 	name string
 	// Error resulted from building a route.
 	err error
+
+	// 增加过滤器链
+	FilterChain *FilterChain
+}
+
+// SetFilter 为该路由设置过滤器
+func (r *Route) SetFilterChain(filterChain *FilterChain) *Route {
+	r.FilterChain = filterChain
+	return r
 }
 
 // Match matches the route against the request.
@@ -88,7 +97,9 @@ func (r *Route) Handler(handler http.Handler) *Route {
 
 // HandlerFunc sets a handler function for the route.
 func (r *Route) HandlerFunc(f func(http.ResponseWriter, *http.Request)) *Route {
-	return r.Handler(http.HandlerFunc(f))
+	//return r.Handler(http.HandlerFunc(f))
+	// 改为我自己的过滤 HandlerFunc
+	return r.Handler(HandlerFunc(f))
 }
 
 // GetHandler returns the handler for the route, if any.
