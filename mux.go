@@ -50,6 +50,9 @@ type Router struct {
 	strictSlash bool
 	// If true, do not clear the request context after handling the request
 	KeepContext bool
+
+	// 设置全局需要的FilterChain
+	filterChain *FilterChain
 }
 
 // Match matches registered routes against the request.
@@ -168,6 +171,11 @@ func (r *Router) buildVars(m map[string]string) map[string]string {
 // NewRoute registers an empty route.
 func (r *Router) NewRoute() *Route {
 	route := &Route{parent: r, strictSlash: r.strictSlash}
+	// 复制一份filterChain，否则所有的route的FilterChain会一样
+	if r.filterChain != nil {
+	    var tmpChain FilterChain = *r.filterChain
+	    route.FilterChain = &tmpChain
+	}
 	r.routes = append(r.routes, route)
 	return route
 }
@@ -181,7 +189,7 @@ func (r *Router) Handle(path string, handler http.Handler) *Route {
 // HandleFunc registers a new route with a matcher for the URL path.
 // See Route.Path() and Route.HandlerFunc().
 func (r *Router) HandleFunc(path string, f func(http.ResponseWriter,
-	*http.Request)) *Route {
+	*http.Request),) *Route {
 	return r.NewRoute().Path(path).HandlerFunc(f)
 }
 
@@ -283,6 +291,12 @@ func (r *Router) walk(walkFn WalkFunc, ancestors []*Route) error {
 		}
 	}
 	return nil
+}
+
+// FilterChain 设置全局需要的FilterChain
+func (r *Router) FilterChain(filterChain *FilterChain) *Router {
+	r.filterChain = filterChain
+	return r
 }
 
 // ----------------------------------------------------------------------------

@@ -35,13 +35,18 @@ type Route struct {
 
 	buildVarsFunc BuildVarsFunc
 
-	// 增加过滤器链
+	// 过滤器链
 	FilterChain *FilterChain
 }
 
-// SetFilter 为该路由设置过滤器
-func (r *Route) SetFilterChain(filterChain *FilterChain) *Route {
-	r.FilterChain = filterChain
+// AppendFilterChain 为该路由增加过滤器链。
+// 如果已经设置过，则将该过滤器链中的过滤器append上
+func (r *Route) AppendFilterChain(filterChain *FilterChain) *Route {
+	if r.FilterChain == nil {
+		r.FilterChain = filterChain
+	} else {
+	    r.FilterChain.Append(filterChain)
+	}
 	return r
 }
 
