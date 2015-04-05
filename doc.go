@@ -87,7 +87,9 @@ There are several other matchers that can be added. To match path prefixes:
 
 ...or to use a custom matcher function:
 
-	r.MatcherFunc(myFunc)
+	r.MatcherFunc(func(r *http.Request, rm *RouteMatch) bool {
+		return r.ProtoMajor == 0
+    })
 
 ...and finally, it is possible to combine several matchers in a single route:
 
@@ -132,7 +134,7 @@ the inner routes use it as base for their paths:
 	// "/products/{key}/"
 	s.HandleFunc("/{key}/", ProductHandler)
 	// "/products/{key}/details"
-	s.HandleFunc("/{key}/details"), ProductDetailsHandler)
+	s.HandleFunc("/{key}/details", ProductDetailsHandler)
 
 Now let's see how to build registered URLs.
 
