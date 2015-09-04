@@ -45,7 +45,7 @@ func (r *Route) AppendFilterChain(filterChain *FilterChain) *Route {
 	if r.FilterChain == nil {
 		r.FilterChain = filterChain
 	} else {
-	    r.FilterChain.Append(filterChain)
+		r.FilterChain.Append(filterChain)
 	}
 	return r
 }

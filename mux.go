@@ -173,8 +173,8 @@ func (r *Router) NewRoute() *Route {
 	route := &Route{parent: r, strictSlash: r.strictSlash}
 	// 复制一份filterChain，否则所有的route的FilterChain会一样
 	if r.filterChain != nil {
-	    var tmpChain FilterChain = *r.filterChain
-	    route.FilterChain = &tmpChain
+		var tmpChain FilterChain = *r.filterChain
+		route.FilterChain = &tmpChain
 	}
 	r.routes = append(r.routes, route)
 	return route
@@ -189,7 +189,7 @@ func (r *Router) Handle(path string, handler http.Handler) *Route {
 // HandleFunc registers a new route with a matcher for the URL path.
 // See Route.Path() and Route.HandlerFunc().
 func (r *Router) HandleFunc(path string, f func(http.ResponseWriter,
-	*http.Request),) *Route {
+	*http.Request)) *Route {
 	return r.NewRoute().Path(path).HandlerFunc(f)
 }
 
